@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 
 export const Route = createFileRoute("/termos")({
   head: () => ({
