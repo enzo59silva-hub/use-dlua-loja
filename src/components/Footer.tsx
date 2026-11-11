@@ -9,7 +9,7 @@ export function Footer() {
         <div>
           <span className="brand-wordmark text-lg">Use D&apos;lua</span>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-            Escolha você todos os dias, feita para mulheres que vestem a própria essência.
+            Moda íntima criada para vestir a sua confiança e destacar a sua melhor versão.
           </p>
         </div>
 
@@ -18,11 +18,7 @@ export function Footer() {
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             {CATEGORIES.map((c) => (
               <li key={c.slug}>
-                <Link
-                  to="/categoria/$slug"
-                  params={{ slug: c.slug }}
-                  className="hover:text-foreground"
-                >
+                <Link to="/categoria/$slug" params={{ slug: c.slug }} className="hover:text-gold">
                   {c.name}
                 </Link>
               </li>
@@ -34,22 +30,22 @@ export function Footer() {
           <p className="eyebrow">Institucional</p>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             <li>
-              <Link to="/sobre" className="hover:text-foreground">
+              <Link to="/sobre" className="hover:text-gold">
                 Sobre a loja
               </Link>
             </li>
             <li>
-              <Link to="/termos" className="hover:text-foreground">
+              <Link to="/termos" className="hover:text-gold">
                 Termos de uso
               </Link>
             </li>
             <li>
-              <Link to="/privacidade" className="hover:text-foreground">
+              <Link to="/privacidade" className="hover:text-gold">
                 Política de privacidade
               </Link>
             </li>
             <li>
-              <Link to="/conta" className="hover:text-foreground">
+              <Link to="/conta" className="hover:text-gold">
                 Minha conta
               </Link>
             </li>
