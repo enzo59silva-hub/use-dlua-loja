@@ -23,8 +23,8 @@ export const Route = createFileRoute("/privacidade")({
           <h2 className="text-lg text-foreground">1. Identificação do controlador dos dados</h2>
           <p>
             Este site (https://use-dlua.vercel.app) é mantido, operado e de propriedade de ANA JULIA
-            SANTOS PEREIRA MAZETTO, pessoa física inscrita no CPF/MF sob o nº 510.262.038-05,
-            residente e domiciliada na cidade de Praia Grande/SP.
+            SANTOS PEREIRA MAZETTO, pessoa física, residente e domiciliada na cidade de Praia
+            Grande/SP.
           </p>
           <p>
             Nos termos da Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018), atuo como

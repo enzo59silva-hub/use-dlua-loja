@@ -25,8 +25,7 @@ export const Route = createFileRoute("/termos")({
           <h2 className="text-lg text-foreground">1. Identificação da loja</h2>
           <p>
             A loja virtual Use D&apos;lua é mantida e operada por ANA JULIA SANTOS PEREIRA MAZETTO,
-            pessoa física inscrita no CPF/MF sob o nº 510.262.038-05, com sede na cidade de Praia
-            Grande/SP.
+            pessoa física, com sede na cidade de Praia Grande/SP.
           </p>
           <ul className="list-disc space-y-2 pl-5">
             <li>Site oficial: https://use-dlua.vercel.app</li>

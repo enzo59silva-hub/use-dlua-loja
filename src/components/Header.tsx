@@ -84,6 +84,13 @@ export function Header() {
             />
           </form>
           <nav className="flex flex-col gap-3">
+            <Link
+              to="/"
+              onClick={() => setOpen(false)}
+              className="text-xs uppercase tracking-[0.18em] text-muted-foreground"
+            >
+              Início
+            </Link>
             {CATEGORIES.map((c) => (
               <Link
                 key={c.slug}
