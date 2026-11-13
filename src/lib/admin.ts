@@ -130,7 +130,7 @@ export async function adminFetchUsers(): Promise<AdminUser[]> {
   const users = snap.docs.map((d) => {
     const data = d.data();
     // createdAt pode ser string ISO (como está no seu banco) ou Timestamp do Firestore
-    const created = data.createdAt;
+    const created = data["createdAt"];
     const createdAt =
       typeof created === "string"
         ? created
@@ -140,11 +140,75 @@ export async function adminFetchUsers(): Promise<AdminUser[]> {
 
     return {
       id: d.id,
-      name: (data.name as string) ?? "",
-      email: (data.email as string) ?? "",
+      name: (data["name"] as string) ?? "",
+      email: (data["email"] as string) ?? "",
       createdAt,
     };
   });
 
   return users.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+// ---------------------------------------------------------------------------
+// CUPONS
+// ---------------------------------------------------------------------------
+
+export type CouponType = "percent" | "fixed";
+
+export type AdminCoupon = {
+  id: string; // o ID do documento é o próprio código do cupom (ex: BEMVINDA50)
+  code: string;
+  type: CouponType;
+  value: number; // percent: 10 = 10% | fixed: em centavos (5000 = R$ 50,00)
+  minSubtotal: number; // em centavos; 0 = sem compra mínima
+};
+
+/**
+ * Busca todos os cupons (coleção "coupons"), em ordem alfabética pelo código.
+ */
+export async function adminFetchCoupons(): Promise<AdminCoupon[]> {
+  const db = getDb();
+  if (!db) throw new Error("Firebase não configurado.");
+
+  const snap = await getDocs(collection(db, "coupons"));
+
+  return snap.docs
+    .map((d) => {
+      const data = d.data();
+      return {
+        id: d.id,
+        code: (data["code"] as string) ?? d.id,
+        type: (data["type"] as CouponType) ?? "percent",
+        value: Number(data["value"] ?? 0),
+        minSubtotal: Number(data["minSubtotal"] ?? 0),
+      } as AdminCoupon;
+    })
+    .sort((a, b) => (a.code ?? "").localeCompare(b.code ?? ""));
+}
+
+/**
+ * Cria ou atualiza um cupom. O ID do documento é o código em maiúsculas.
+ * merge: true mantém campos extras que o documento já tenha.
+ */
+export async function adminSaveCoupon(data: Omit<AdminCoupon, "id">): Promise<void> {
+  const db = getDb();
+  if (!db) throw new Error("Firebase não configurado.");
+
+  const code = data.code.trim().toUpperCase();
+
+  await setDoc(
+    doc(db, "coupons", code),
+    { code, type: data.type, value: data.value, minSubtotal: data.minSubtotal },
+    { merge: true },
+  );
+}
+
+/**
+ * Exclui um cupom pelo ID (o código).
+ */
+export async function adminDeleteCoupon(id: string): Promise<void> {
+  const db = getDb();
+  if (!db) throw new Error("Firebase não configurado.");
+
+  await deleteDoc(doc(db, "coupons", id));
 }

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import type { CartItem, Coupon } from "./types";
+import { formatPrice, type CartItem, type Coupon } from "./types";
 import { fetchCoupon } from "./catalog";
 
 const STORAGE_KEY = "usedlua.cart.v1";
@@ -94,7 +94,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (!coupon) return 0;
     if (coupon.minSubtotal && subtotal < coupon.minSubtotal) return 0;
     const raw = coupon.type === "percent" ? (subtotal * coupon.value) / 100 : coupon.value;
-    return Math.min(subtotal, Math.round(raw * 100) / 100);
+    return Math.min(subtotal, Math.round(raw));
   }, [coupon, subtotal]);
 
   const applyCoupon = useCallback(
@@ -107,7 +107,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return false;
       }
       if (found.minSubtotal && subtotal < found.minSubtotal) {
-        setCouponError(`Cupom válido em compras acima de R$ ${found.minSubtotal.toFixed(2)}.`);
+        setCouponError(`Cupom válido em compras acima de ${formatPrice(found.minSubtotal)}.`);
         setCoupon(null);
         return false;
       }

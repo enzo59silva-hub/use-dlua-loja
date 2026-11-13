@@ -72,7 +72,7 @@ function AdminProdutos() {
   // Caso contrário, mostra a lista
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl tracking-wide">Produtos</h1>
         {/* Clique em "Novo produto" abre o formulário com objeto vazio */}
         <button onClick={() => setEditing({})} className="btn-gold">
@@ -85,53 +85,88 @@ function AdminProdutos() {
       ) : products.length === 0 ? (
         <p className="text-sm text-muted-foreground">Nenhum produto cadastrado ainda.</p>
       ) : (
-        <div className="overflow-hidden rounded border border-border">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary text-left text-xs uppercase tracking-widest text-muted-foreground">
-              <tr>
-                <th className="px-4 py-3">Nome</th>
-                <th className="px-4 py-3">Categoria</th>
-                <th className="px-4 py-3">Preço</th>
-                <th className="px-4 py-3">Estoque</th>
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {products.map((p) => (
-                <tr key={p.id} className="hover:bg-secondary/40">
-                  <td className="px-4 py-3 font-medium">
-                    {p.name}
-                    {p.soldOut && (
-                      <span className="ml-2 rounded bg-secondary px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
-                        Esgotado
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">{p.category}</td>
-                  <td className="px-4 py-3">{formatPrice(p.price)}</td>
-                  <td className="px-4 py-3">{p.stock}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-3 justify-end">
-                      {/* Clique em "Editar" passa o produto completo para o formulário */}
-                      <button
-                        onClick={() => setEditing(p)}
-                        className="text-xs underline underline-offset-2"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => handleDelete(p.id)}
-                        className="text-xs text-destructive underline underline-offset-2"
-                      >
-                        Excluir
-                      </button>
-                    </div>
-                  </td>
+        <>
+          <div className="hidden overflow-hidden rounded border border-border md:block">
+            <table className="w-full text-sm">
+              <thead className="bg-secondary text-left text-xs uppercase tracking-widest text-muted-foreground">
+                <tr>
+                  <th className="px-4 py-3">Nome</th>
+                  <th className="px-4 py-3">Categoria</th>
+                  <th className="px-4 py-3">Preço</th>
+                  <th className="px-4 py-3">Estoque</th>
+                  <th className="px-4 py-3" />
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {products.map((p) => (
+                  <tr key={p.id} className="hover:bg-secondary/40">
+                    <td className="px-4 py-3 font-medium">
+                      {p.name}
+                      {p.soldOut && (
+                        <span className="ml-2 rounded bg-secondary px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+                          Esgotado
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-muted-foreground">{p.category}</td>
+                    <td className="px-4 py-3">{formatPrice(p.price)}</td>
+                    <td className="px-4 py-3">{p.stock}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex gap-3 justify-end">
+                        {/* Clique em "Editar" passa o produto completo para o formulário */}
+                        <button
+                          onClick={() => setEditing(p)}
+                          className="text-xs underline underline-offset-2"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => handleDelete(p.id)}
+                          className="text-xs text-destructive underline underline-offset-2"
+                        >
+                          Excluir
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile: cada produto vira um cartão, com Editar/Excluir centralizados */}
+          <div className="flex flex-col gap-3 md:hidden">
+            {products.map((p) => (
+              <div key={p.id} className="rounded border border-border px-4 py-3">
+                <p className="text-sm font-medium">
+                  {p.name}
+                  {p.soldOut && (
+                    <span className="ml-2 rounded bg-secondary px-2 py-0.5 text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Esgotado
+                    </span>
+                  )}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {p.category} · {formatPrice(p.price)} · Estoque: {p.stock}
+                </p>
+                <div className="mt-3 flex justify-center gap-8 border-t border-border pt-3">
+                  <button
+                    onClick={() => setEditing(p)}
+                    className="text-xs underline underline-offset-2"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDelete(p.id)}
+                    className="text-xs text-destructive underline underline-offset-2"
+                  >
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

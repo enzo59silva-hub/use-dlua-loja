@@ -12,6 +12,7 @@
 
 import { useState } from "react";
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
+import { Menu } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 
 // createFileRoute registra esta rota no TanStack Router
@@ -29,6 +30,8 @@ function AdminLayout() {
   // useAuth() retorna o usuário atual e as funções de login/logout
   // Definido em src/lib/auth.tsx
   const { user, loading, isAdmin } = useAuth();
+  // Controla o menu hambúrguer no mobile (aberto/fechado)
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Enquanto o Firebase verifica a sessão, mostra um loader simples
   if (loading) {
@@ -55,12 +58,31 @@ function AdminLayout() {
   // Usuário logado: renderiza o painel
   return (
     <div className="flex min-h-screen">
-      {/* Barra lateral com os links de navegação */}
-      <Sidebar />
+      {/* Fundo escuro atrás do menu (só mobile, quando aberto). Clicou fora, fecha */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-55 bg-black/40 md:hidden"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
+      {/* Barra lateral: gaveta no mobile, fixa no desktop */}
+      <Sidebar open={menuOpen} onNavigate={() => setMenuOpen(false)} />
 
       {/* Outlet é onde as subrotas são renderizadas
           Quando o usuário acessa /admin/produtos, o conteúdo aparece aqui */}
-      <main className="flex-1 overflow-auto p-8">
+      <main className="min-w-0 flex-1 overflow-auto p-4 md:p-8">
+        {/* Botão hambúrguer (só aparece no mobile) */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Abrir menu do admin"
+          className="mb-4 flex items-center gap-2 rounded border border-border px-3 py-2 text-sm md:hidden"
+        >
+          <Menu size={18} />
+          Menu
+        </button>
+
         <Outlet />
       </main>
     </div>
@@ -71,7 +93,7 @@ function AdminLayout() {
 // Barra lateral de navegação
 // ---------------------------------------------------------------------------
 
-function Sidebar() {
+function Sidebar({ open, onNavigate }: { open: boolean; onNavigate: () => void }) {
   const { user, logout } = useAuth();
   // useLocation retorna a rota atual — usamos para destacar o link ativo
   const { pathname } = useLocation();
@@ -81,10 +103,15 @@ function Sidebar() {
     { to: "/admin/produtos", label: "Produtos" },
     { to: "/admin/pedidos", label: "Pedidos" },
     { to: "/admin/usuarios", label: "Usuários" },
+    { to: "/admin/cupons", label: "Cupons" },
   ];
 
   return (
-    <aside className="flex w-52 flex-col border-r border-border bg-background px-4 py-8">
+    <aside
+      className={`fixed inset-y-0 left-0 z-60 flex w-52 flex-col border-r border-border bg-background px-4 py-8 transition-transform md:static md:z-auto md:translate-x-0 ${
+        open ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       <p className="mb-8 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
         Admin
       </p>
@@ -94,6 +121,7 @@ function Sidebar() {
           <Link
             key={to}
             to={to}
+            onClick={onNavigate}
             className={`rounded px-3 py-2 text-sm ${
               // pathname.startsWith(to) destaca o link da página atual
               pathname.startsWith(to)
