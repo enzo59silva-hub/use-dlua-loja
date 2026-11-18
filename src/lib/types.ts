@@ -35,6 +35,8 @@ export type Product = {
   bestSeller?: boolean;
   /** Aparece na seção Lançamentos da home. */
   launch?: boolean;
+  /** Aparece na seção "Combos calcinhas" da home. */
+  combo?: boolean;
   /** Mostra a etiqueta vermelha "Últimas unidades". Se vazio, segue o estoque. */
   lowStockBadge?: boolean;
   /** Mostra a etiqueta preta "Promoção". Se vazio, segue o preço promocional. */

@@ -218,6 +218,7 @@ function ProductForm({
 
   const [bestSeller, setBestSeller] = useState(initial.bestSeller ?? false);
   const [launch, setLaunch] = useState(initial.launch ?? false);
+  const [combo, setCombo] = useState(initial.combo ?? false);
   const [lowStockBadge, setLowStockBadge] = useState(
     initial.lowStockBadge ?? (initial.stock !== undefined && isLowStock(initial.stock)),
   );
@@ -277,6 +278,7 @@ function ProductForm({
         variants: initial.variants ?? [],
         bestSeller,
         launch,
+        combo,
         lowStockBadge,
         promoBadge,
         soldOut,
@@ -457,6 +459,20 @@ function ProductForm({
           />
           <label htmlFor="launch" className="text-sm">
             Lançamentos (aparece na seção Lançamentos da home)
+          </label>
+        </div>
+
+        {/* Combos calcinhas */}
+        <div className="flex items-center gap-3">
+          <input
+            id="combo"
+            type="checkbox"
+            checked={combo}
+            onChange={(e) => setCombo(e.target.checked)}
+            className="h-4 w-4"
+          />
+          <label htmlFor="combo" className="text-sm">
+            Combo (aparece na seção "Combos calcinhas" da home)
           </label>
         </div>
 

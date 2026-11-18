@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchProducts } from "@/lib/catalog";
 import { ProductGrid } from "@/components/ProductGrid";
 import { ProductImage } from "@/components/ProductImage";
+import { ReviewsSection } from "@/components/ReviewsSection";
 import { CATEGORIES } from "@/lib/types";
 
 // Otimiza imagens do Cloudinary: formato e qualidade automáticos + largura limitada
@@ -15,6 +16,9 @@ const BANNER_MOBILE =
 // Banner promocional (10% na primeira compra) — troque pela URL do Cloudinary
 const BANNER_PROMO =
   "https://res.cloudinary.com/jiy5sao1/image/upload/v1793825422/WhatsApp_Image_2026-11-04_at_17.31.12.jpg";
+// Banner entre "Mais vendidos" e "Combos calcinhas"
+const BANNER_COMBOS =
+  "https://res.cloudinary.com/cmehevck/image/upload/v1795012342/WhatsApp_Image_2026-11-18_at_11.26.18.jpg";
 
 const CATEGORY_IMAGES = [
   "https://res.cloudinary.com/cmehevck/image/upload/v1792505770/WhatsApp_Image_2026-10-20_at_11.15.10.jpg",
@@ -202,7 +206,7 @@ function Home() {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 8);
   const maisVendidos = products.filter((p) => p.bestSeller).slice(0, 8);
-
+  const combosCalcinhas = products.filter((p) => p.combo).slice(0, 8);
   return (
     <div>
       {/* Banner principal — substitua pela sua imagem */}
@@ -337,6 +341,33 @@ function Home() {
         )}
       </section>
 
+      {/* Banner entre Mais vendidos e Combos calcinhas */}
+      <section className="mb-20 w-full">
+        <img
+          src={cld(BANNER_COMBOS, 1600)}
+          alt="Banner Use D'lua"
+          width={1600}
+          height={534}
+          loading="lazy"
+          decoding="async"
+          className="block h-auto w-full md:mx-auto md:max-w-5xl"
+        />
+      </section>
+
+      {combosCalcinhas.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <p className="eyebrow">Leve mais, pague menos</p>
+            <h2 className="mt-2 text-3xl">Combos calcinhas</h2>
+          </div>
+          {isLoading ? (
+            <div className="min-h-80" aria-hidden="true" />
+          ) : (
+            <ProductGrid products={combosCalcinhas} carousel />
+          )}
+        </section>
+      )}
+
       {/* Botão do Instagram */}
       <section className="px-4 pb-20">
         <a
@@ -355,6 +386,8 @@ function Home() {
           </span>
         </a>
       </section>
+
+      <ReviewsSection />
     </div>
   );
 }
